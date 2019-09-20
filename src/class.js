@@ -37,6 +37,16 @@
       return this.executeBatchRun_(projectName, param);
     };
 
+    MagicPodClient.prototype.executeBatchRunOnSauceLabs = function (projectName, param) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!param) throw new Error('"param"は必須です');
+
+      param.environment = 'saucelabs';
+      param.device_type = 'real_device';
+
+      return this.executeBatchRun_(projectName, param);
+    };
+
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
       param.device_language = (!param.device_language) ? 'ja' : param.device_language;
       param.device_region = (!param.device_region) ? 'JP' : param.device_region;
