@@ -11,7 +11,31 @@
       if (!projectName) throw new Error('"projectName"は必須です');
       if (!batchRunNo) throw new Error('"batchRunNo"は必須です');
 
-      return this.fetch_(Utilities.formatString('/%s/batch-run/%s/', projectName, batchRunNo), {method: 'get'});
+      return this.fetch_(Utilities.formatString('/%s/batch-run/%s/', projectName, batchRunNo), { method: 'get' });
+    };
+
+    MagicPodClient.prototype.executeBatchRunOnMagicPod = function (projectName, param) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!param) throw new Error('"param"は必須です');
+
+      param.environment = 'magic_pod';
+      param.os = 'ios';
+      param.device_type = 'simulator';
+      param.version = '12.2';
+      param.model = 'iPhone 8';
+
+      return this.executeBatchRun_(projectName, param);
+    };
+
+    MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
+      param.device_language = (!param.device_language) ? 'ja' : param.device_language;
+      param.device_region = (!param.device_region) ? 'JP' : param.device_region;
+      param.test_case_numbers = (!param.test_case_numbers) ? [] : param.test_case_numbers;
+      param.send_mail = (!param.send_mail) ? false : param.send_mail;
+      param.retry_count = (!param.retry_count) ? 0 : param.retry_count;
+      param.capture_type = (!param.capture_type) ? 'on_each_step' : param.capture_type;
+
+      return this.fetch_(Utilities.formatString('/%s/batch-run/', projectName), { method: 'post', payload: param });
     };
 
     MagicPodClient.prototype.fetch_ = function (endPoint, options) {
