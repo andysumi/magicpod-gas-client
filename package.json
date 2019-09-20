@@ -1,0 +1,25 @@
+{
+  "name": "magicpod-gas-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andysumi/magicpod-gas-client.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andysumi/magicpod-gas-client/issues"
+  },
+  "homepage": "https://github.com/andysumi/magicpod-gas-client#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-plugin-googleappsscript": "^1.0.3"
+  }
+}
