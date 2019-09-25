@@ -47,6 +47,20 @@
       return this.executeBatchRun_(projectName, param);
     };
 
+    MagicPodClient.prototype.uploadFromFileUrl = function (projectName, url, fileName) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!url) throw new Error('"url"は必須です');
+      var result = url.match(/^https?:\/\/.+\.(app|ipa|apk|zip)/);
+      if (!result) throw new Error('URLの指定が誤っています');
+
+      // ファイルをダウンロード
+      var blob = UrlFetchApp.fetch(url).getBlob();
+      var fileFullName = (fileName) ? Utilities.formatString('%s.%s', fileName, result[1]) : blob.getName();
+      blob.setName(fileFullName);
+
+      return this.fetch_(Utilities.formatString('/%s/upload-file/', projectName), { method: 'post', payload: { file: blob} });
+    };
+
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
       param.device_language = (!param.device_language) ? 'ja' : param.device_language;
       param.device_region = (!param.device_region) ? 'JP' : param.device_region;
