@@ -47,6 +47,42 @@
       return this.executeBatchRun_(projectName, param);
     };
 
+    MagicPodClient.prototype.uploadFromFileUrl = function (projectName, url, fileName) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!url) throw new Error('"url"は必須です');
+      var extension = url.match(/^https?:\/\/.+\.(app|ipa|apk|zip)/);
+      if (!extension) throw new Error('URLの指定が誤っています');
+
+      // ファイルをダウンロード
+      var blob = UrlFetchApp.fetch(url).getBlob();
+
+      if (fileName) {
+        blob.setName(Utilities.formatString('%s.%s', fileName, extension[1]));
+      }
+
+      return this.fetch_(Utilities.formatString('/%s/upload-file/', projectName), { method: 'post', payload: { file: blob} });
+    };
+
+    MagicPodClient.prototype.uploadFromGoogleDrive = function (projectName, sharedUrl, fileName) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!sharedUrl) throw new Error('"sharedUrl"は必須です');
+
+      var fileId = sharedUrl.match(/^https:\/\/drive\.google\.com\/file\/d\/(.+)\//);
+      if (!fileId) throw new Error('URLの指定が誤っています');
+
+      // ファイルを取得 ※アクセス権限がない場合はエラーになる
+      var blob = DriveApp.getFileById(fileId[1]).getBlob();
+
+      var extension = blob.getName().match(/\.(app|ipa|apk|zip)/);
+      if (!extension) throw new Error('アプリのファイルではありません');
+
+      if (fileName) {
+        blob.setName(Utilities.formatString('%s.%s', fileName, extension[1]));
+      }
+
+      return this.fetch_(Utilities.formatString('/%s/upload-file/', projectName), { method: 'post', payload: { file: blob } });
+    };
+
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
       param.device_language = (!param.device_language) ? 'ja' : param.device_language;
       param.device_region = (!param.device_region) ? 'JP' : param.device_region;
@@ -55,17 +91,18 @@
       param.retry_count = (!param.retry_count) ? 0 : param.retry_count;
       param.capture_type = (!param.capture_type) ? 'on_each_step' : param.capture_type;
 
-      return this.fetch_(Utilities.formatString('/%s/batch-run/', projectName), { method: 'post', payload: param });
+      return this.fetch_(Utilities.formatString('/%s/batch-run/', projectName), { method: 'post', payload: JSON.stringify(param) });
     };
 
     MagicPodClient.prototype.fetch_ = function (endPoint, options) {
       var url = this.apiUrl + endPoint;
+      var contentType = (typeof options.payload == 'string') ? 'application/json' : null;
       var response = UrlFetchApp.fetch(url, {
         method: options.method,
         muteHttpExceptions: true,
-        contentType: 'application/json; charset=utf-8',
+        contentType: contentType,
         headers: this.headers,
-        payload: JSON.stringify(options.payload) || {}
+        payload: options.payload || {}
       });
 
       try {
