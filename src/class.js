@@ -69,17 +69,18 @@
       param.retry_count = (!param.retry_count) ? 0 : param.retry_count;
       param.capture_type = (!param.capture_type) ? 'on_each_step' : param.capture_type;
 
-      return this.fetch_(Utilities.formatString('/%s/batch-run/', projectName), { method: 'post', payload: param });
+      return this.fetch_(Utilities.formatString('/%s/batch-run/', projectName), { method: 'post', payload: JSON.stringify(param) });
     };
 
     MagicPodClient.prototype.fetch_ = function (endPoint, options) {
       var url = this.apiUrl + endPoint;
+      var contentType = (typeof options.payload == 'string') ? 'application/json' : null;
       var response = UrlFetchApp.fetch(url, {
         method: options.method,
         muteHttpExceptions: true,
-        contentType: 'application/json; charset=utf-8',
+        contentType: contentType,
         headers: this.headers,
-        payload: JSON.stringify(options.payload) || {}
+        payload: options.payload || {}
       });
 
       try {
