@@ -50,15 +50,37 @@
     MagicPodClient.prototype.uploadFromFileUrl = function (projectName, url, fileName) {
       if (!projectName) throw new Error('"projectName"は必須です');
       if (!url) throw new Error('"url"は必須です');
-      var result = url.match(/^https?:\/\/.+\.(app|ipa|apk|zip)/);
-      if (!result) throw new Error('URLの指定が誤っています');
+      var extension = url.match(/^https?:\/\/.+\.(app|ipa|apk|zip)/);
+      if (!extension) throw new Error('URLの指定が誤っています');
 
       // ファイルをダウンロード
       var blob = UrlFetchApp.fetch(url).getBlob();
-      var fileFullName = (fileName) ? Utilities.formatString('%s.%s', fileName, result[1]) : blob.getName();
-      blob.setName(fileFullName);
+
+      if (fileName) {
+        blob.setName(Utilities.formatString('%s.%s', fileName, extension[1]));
+      }
 
       return this.fetch_(Utilities.formatString('/%s/upload-file/', projectName), { method: 'post', payload: { file: blob} });
+    };
+
+    MagicPodClient.prototype.uploadFromGoogleDrive = function (projectName, sharedUrl, fileName) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!sharedUrl) throw new Error('"sharedUrl"は必須です');
+
+      var fileId = sharedUrl.match(/^https:\/\/drive\.google\.com\/file\/d\/(.+)\//);
+      if (!fileId) throw new Error('URLの指定が誤っています');
+
+      // ファイルを取得 ※アクセス権限がない場合はエラーになる
+      var blob = DriveApp.getFileById(fileId[1]).getBlob();
+
+      var extension = blob.getName().match(/\.(app|ipa|apk|zip)/);
+      if (!extension) throw new Error('アプリのファイルではありません');
+
+      if (fileName) {
+        blob.setName(Utilities.formatString('%s.%s', fileName, extension[1]));
+      }
+
+      return this.fetch_(Utilities.formatString('/%s/upload-file/', projectName), { method: 'post', payload: { file: blob } });
     };
 
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {

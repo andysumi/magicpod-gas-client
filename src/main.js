@@ -97,3 +97,14 @@ function executeBatchRunOnSauceLabs(projectName, param) { // eslint-disable-line
 function uploadFromFileUrl(projectName, url, fileName) { // eslint-disable-line no-unused-vars
   throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
 }
+
+/**
+ * GoogleドライブからアプリをMagic Podにアップロードする
+ * @param {string} projectName プロジェクト名
+ * @param {string} sharedUrl ファイルの共有URL
+ * @param {string} [fileName] 指定しない場合は、既存のファイル名のまま
+ * @return {Object}
+ */
+function uploadFromGoogleDrive(projectName, sharedUrl, fileName) { // eslint-disable-line no-unused-vars
+  throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
+}
