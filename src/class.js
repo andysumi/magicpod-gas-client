@@ -83,6 +83,12 @@
       return this.fetch_(Utilities.formatString('/%s/upload-file/', projectName), { method: 'post', payload: { file: blob } });
     };
 
+    MagicPodClient.prototype.getAppFiles = function (projectName) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+
+      return this.fetch_(Utilities.formatString('/%s/list-files/', projectName), { method: 'get' });
+    };
+
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
       param.device_language = (!param.device_language) ? 'ja' : param.device_language;
       param.device_region = (!param.device_region) ? 'JP' : param.device_region;
