@@ -108,3 +108,22 @@ function uploadFromFileUrl(projectName, url, fileName) { // eslint-disable-line 
 function uploadFromGoogleDrive(projectName, sharedUrl, fileName) { // eslint-disable-line no-unused-vars
   throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
 }
+
+/**
+ * Magic Podにアップロードしたアプリの一覧を取得する
+ * @param {string} projectName プロジェクト名
+ * @return {Object}
+ */
+function getAppFiles(projectName) { // eslint-disable-line no-unused-vars
+  throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
+}
+
+/**
+ * Magic Podにアップロードしたアプリを削除する
+ * @param {string} projectName プロジェクト名
+ * @param {number} fileNo アプリのNo
+ * @return {Object}
+ */
+function deleteAppFile(projectName, fileNo) { // eslint-disable-line no-unused-vars
+  throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
+}
