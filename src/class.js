@@ -89,6 +89,13 @@
       return this.fetch_(Utilities.formatString('/%s/list-files/', projectName), { method: 'get' });
     };
 
+    MagicPodClient.prototype.deleteAppFile = function (projectName, fileNo) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+      if (!fileNo) throw new Error('"fileNo"は必須です');
+
+      return this.fetch_(Utilities.formatString('/%s/delete-file/', projectName), { method: 'delete', payload: JSON.stringify({ app_file_number: fileNo }) });
+    };
+
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
       param.device_language = (!param.device_language) ? 'ja' : param.device_language;
       param.device_region = (!param.device_region) ? 'JP' : param.device_region;
