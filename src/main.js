@@ -22,8 +22,9 @@ function getBatchRunResult(projectName, batchRunNo) { // eslint-disable-line no-
  * MagicPodのクラウド環境でテスト一括実行を実行する
  * @param {string} projectName プロジェクト名
  * @param {Object} param パラメータ
+ *   @param {string} param.os
  *   @param {string} param.app_type アプリをクラウドに送信する方法
- *   @param {number} [param.app_file_number] app_typeが"app_file”の場合は必須
+ *   @param {string} [param.app_file_number] app_typeが"app_file”の場合は必須
  *   @param {string} [param.app_url] app_typeが"app_url”の場合は必須
  *   @param {Array<number>} [param.test_case_numbers=[]] 一括実行で呼び出されるテストケース番号
  *   @param {boolean} [param.send_mail=false] "true"の場合はテスト結果をメンバーに送信
@@ -32,6 +33,7 @@ function getBatchRunResult(projectName, batchRunNo) { // eslint-disable-line no-
  *   @param {string} [param.device_language='ja'] デバイスの言語
  *   @param {string} [param.device_region='JP'] デバイスのリージョン
  *   @param {string} [param.credentials] シークレット変数
+ *   @param {string} [param.log_level='beginner'] 出力するログの詳細度
  * @return {Object}
  */
 function executeBatchRunOnMagicPod(projectName, param) { // eslint-disable-line no-unused-vars
@@ -48,7 +50,7 @@ function executeBatchRunOnMagicPod(projectName, param) { // eslint-disable-line 
  *   @param {string} param.version
  *   @param {string} param.model 設定できる端末 https://www.browserstack.com/list-of-browsers-and-platforms/app_automate
  *   @param {string} param.app_type アプリをクラウドに送信する方法
- *   @param {number} [param.app_file_number] app_typeが"app_file”の場合は必須
+ *   @param {string} [param.app_file_number] app_typeが"app_file”の場合は必須
  *   @param {string} [param.app_url] app_typeが"app_url”の場合は必須
  *   @param {Array<number>} [param.test_case_numbers=[]] 一括実行で呼び出されるテストケース番号
  *   @param {boolean} [param.send_mail=false] "true"の場合はテスト結果をメンバーに送信
@@ -57,6 +59,7 @@ function executeBatchRunOnMagicPod(projectName, param) { // eslint-disable-line 
  *   @param {string} [param.device_language='ja'] デバイスの言語
  *   @param {string} [param.device_region='JP'] デバイスのリージョン
  *   @param {string} [param.credentials] シークレット変数
+ *   @param {string} [param.log_level='beginner'] 出力するログの詳細度
  * @return {Object}
  */
 function executeBatchRunOnBrowserStack(projectName, param) { // eslint-disable-line no-unused-vars
@@ -72,7 +75,7 @@ function executeBatchRunOnBrowserStack(projectName, param) { // eslint-disable-l
  *   @param {string} param.version
  *   @param {string} param.model
  *   @param {string} param.app_type アプリをクラウドに送信する方法
- *   @param {number} [param.app_file_number] app_typeが"app_file”の場合は必須
+ *   @param {string} [param.app_file_number] app_typeが"app_file”の場合は必須
  *   @param {string} [param.app_url] app_typeが"app_url”の場合は必須
  *   @param {Array<number>} [param.test_case_numbers=[]] 一括実行で呼び出されるテストケース番号
  *   @param {boolean} [param.send_mail=false] "true"の場合はテスト結果をメンバーに送信
@@ -81,6 +84,7 @@ function executeBatchRunOnBrowserStack(projectName, param) { // eslint-disable-l
  *   @param {string} [param.device_language='ja'] デバイスの言語
  *   @param {string} [param.device_region='JP'] デバイスのリージョン
  *   @param {string} [param.credentials] シークレット変数
+ *   @param {string} [param.log_level='beginner'] 出力するログの詳細度
  * @return {Object}
  */
 function executeBatchRunOnSauceLabs(projectName, param) { // eslint-disable-line no-unused-vars
