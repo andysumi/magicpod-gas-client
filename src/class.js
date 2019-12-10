@@ -19,10 +19,21 @@
       if (!param) throw new Error('"param"は必須です');
 
       param.environment = 'magic_pod';
-      param.os = 'ios';
-      param.device_type = 'simulator';
-      param.version = '12.2';
-      param.model = 'iPhone 8';
+
+      switch (param.os) {
+      case 'ios':
+        param.device_type = 'simulator';
+        param.version = '13.1';
+        param.model = 'iPhone 8';
+        break;
+      case 'android':
+        param.device_type = 'emulator';
+        param.version = '10';
+        param.model = 'Nexus 5X';
+        break;
+      default:
+        throw new Error('"os"の指定が正しくありません');
+      }
 
       return this.executeBatchRun_(projectName, param);
     };
@@ -103,6 +114,7 @@
       param.send_mail = (!param.send_mail) ? false : param.send_mail;
       param.retry_count = (!param.retry_count) ? 0 : param.retry_count;
       param.capture_type = (!param.capture_type) ? 'on_each_step' : param.capture_type;
+      param.log_level = (!param.log_level) ? 'beginner' : param.log_level;
 
       return this.fetch_(Utilities.formatString('/%s/batch-run/', projectName), { method: 'post', payload: JSON.stringify(param) });
     };

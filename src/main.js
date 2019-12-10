@@ -22,6 +22,7 @@ function getBatchRunResult(projectName, batchRunNo) { // eslint-disable-line no-
  * MagicPodのクラウド環境でテスト一括実行を実行する
  * @param {string} projectName プロジェクト名
  * @param {Object} param パラメータ
+ *   @param {string} param.os
  *   @param {string} param.app_type アプリをクラウドに送信する方法
  *   @param {number} [param.app_file_number] app_typeが"app_file”の場合は必須
  *   @param {string} [param.app_url] app_typeが"app_url”の場合は必須
@@ -32,6 +33,7 @@ function getBatchRunResult(projectName, batchRunNo) { // eslint-disable-line no-
  *   @param {string} [param.device_language='ja'] デバイスの言語
  *   @param {string} [param.device_region='JP'] デバイスのリージョン
  *   @param {string} [param.credentials] シークレット変数
+ *   @param {string} [param.log_level='beginner'] 出力するログの詳細度
  * @return {Object}
  */
 function executeBatchRunOnMagicPod(projectName, param) { // eslint-disable-line no-unused-vars
