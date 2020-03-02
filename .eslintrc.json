@@ -6,8 +6,12 @@
     "googleappsscript/googleappsscript": true
   },
   "globals": {
-    "MagicPodClient": false,
-    "console": false
+    // Google Apps Script
+    "console": true,
+    // External Libraries
+    "GasTap": true,
+    // Our classes
+    "MagicPodClient": true
   },
   "rules": {
     "semi": "warn",
