@@ -3,6 +3,7 @@ var TestCommon = function TestCommon() {
   this.token = properties.getProperty('token');
   this.orgName = properties.getProperty('orgName');
   this.appFileUrl = properties.getProperty('appFileUrl');
+  this.appFileSharedUrl = properties.getProperty('appFileSharedUrl');
 };
 
 TestCommon.prototype.getClient = function getClient() {

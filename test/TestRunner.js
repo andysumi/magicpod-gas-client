@@ -13,6 +13,7 @@ function TestRunner() { // eslint-disable-line no-unused-vars
     testGetBatchRunResult(test, common);
     testExecuteBatchRunOnMagicPod(test, common);
     testUploadFromFileUrl(test, common);
+    testUploadFromGoogleDrive(test, common);
     /***********************************************/
   } catch (err) {
     test('Exception occurred', function f(assert) {
@@ -142,6 +143,20 @@ function testUploadFromFileUrl(test, common) {
 
     var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
     var result = client.uploadFromFileUrl(projectName, common.appFileUrl, fileName);
+    t.equal(result.file_name, fileName + '.apk', 'file_nameが正しいこと');
+    t.equal(typeof result.file_no, 'number', 'file_noが正しいこと');
+    t.ok(Object.prototype.hasOwnProperty.call(result, 'created'), 'createdを含むこと');
+  });
+}
+
+function testUploadFromGoogleDrive(test, common) {
+  var projectName = 'android';
+
+  test('uploadFromGoogleDrive()', function (t) {
+    var client = common.getClient();
+
+    var fileName = Utilities.formatString('Demo-fromGDrive_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
+    var result = client.uploadFromGoogleDrive(projectName, common.appFileSharedUrl, fileName);
     t.equal(result.file_name, fileName + '.apk', 'file_nameが正しいこと');
     t.equal(typeof result.file_no, 'number', 'file_noが正しいこと');
     t.ok(Object.prototype.hasOwnProperty.call(result, 'created'), 'createdを含むこと');
