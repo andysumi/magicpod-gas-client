@@ -11,6 +11,7 @@ function TestRunner() { // eslint-disable-line no-unused-vars
   try {
     /***** Test cases ******************************/
     testGetBatchRunResult(test, common);
+    testExecuteBatchRunOnMagicPod(test, common);
     /***********************************************/
   } catch (err) {
     test('Exception occurred', function f(assert) {
@@ -93,5 +94,41 @@ function testGetBatchRunResult(test, common) {
         'url': 'https://magic-pod.com/sandbox/android/batch-run/7/'
       },
       'deep equal unresolved result');
+  });
+}
+
+function testExecuteBatchRunOnMagicPod(test, common) {
+  var projectName = 'android';
+
+  test('executeBatchRunOnMagicPod() - Android', function (t) {
+    var client = common.getClient();
+    var result;
+
+    result = client.executeBatchRunOnMagicPod(projectName, {
+      os: 'android',
+      app_type: 'app_file',
+      app_file_number: 'latest',
+    });
+    t.equal(result.organization_name, common.orgName, 'organization_nameが正しいこと');
+    t.equal(result.project_name, projectName, 'project_nameが正しいこと');
+    t.equal(typeof result.batch_run_number, 'number', 'batch_run_numberが正しいこと');
+    t.equal(result.status, 'running', 'statusが正しいこと');
+    t.ok(result.hasOwnProperty('test_cases'), 'test_casesを含むこと');
+    t.equal(result.url, Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/%s/', common.orgName, projectName, result.batch_run_number), 'urlが正しいこと');
+
+    result = client.executeBatchRunOnMagicPod(projectName, {
+      os: 'android',
+      app_type: 'app_url',
+      app_url: 'https://storage.googleapis.com/android-demo-app/Demo.apk',
+      test_case_numbers: [1],
+      send_mail: true,
+      retry_count: 1,
+      capture_type: 'on_error',
+      device_language: 'default',
+      device_region: 'Default',
+      credentials: { key: 'value' },
+      log_level: 'expert'
+    });
+    t.equal(typeof result.batch_run_number, 'number', 'batch_run_numberが正しいこと');
   });
 }
