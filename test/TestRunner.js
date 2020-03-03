@@ -12,6 +12,7 @@ function TestRunner() { // eslint-disable-line no-unused-vars
     /***** Test cases ******************************/
     testGetBatchRunResult(test, common);
     testExecuteBatchRunOnMagicPod(test, common);
+    testUploadFromFileUrl(test, common);
     /***********************************************/
   } catch (err) {
     test('Exception occurred', function f(assert) {
@@ -113,13 +114,13 @@ function testExecuteBatchRunOnMagicPod(test, common) {
     t.equal(result.project_name, projectName, 'project_nameが正しいこと');
     t.equal(typeof result.batch_run_number, 'number', 'batch_run_numberが正しいこと');
     t.equal(result.status, 'running', 'statusが正しいこと');
-    t.ok(result.hasOwnProperty('test_cases'), 'test_casesを含むこと');
+    t.ok(Object.prototype.hasOwnProperty.call(result, 'test_cases'), 'test_casesを含むこと');
     t.equal(result.url, Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/%s/', common.orgName, projectName, result.batch_run_number), 'urlが正しいこと');
 
     result = client.executeBatchRunOnMagicPod(projectName, {
       os: 'android',
       app_type: 'app_url',
-      app_url: 'https://storage.googleapis.com/android-demo-app/Demo.apk',
+      app_url: common.appFileUrl,
       test_case_numbers: [1],
       send_mail: true,
       retry_count: 1,
@@ -130,5 +131,19 @@ function testExecuteBatchRunOnMagicPod(test, common) {
       log_level: 'expert'
     });
     t.equal(typeof result.batch_run_number, 'number', 'batch_run_numberが正しいこと');
+  });
+}
+
+function testUploadFromFileUrl(test, common) {
+  var projectName = 'android';
+
+  test('testUploadFromFileUrl()', function (t) {
+    var client = common.getClient();
+
+    var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
+    var result = client.uploadFromFileUrl(projectName, common.appFileUrl, fileName);
+    t.equal(result.file_name, fileName + '.apk', 'file_nameが正しいこと');
+    t.equal(typeof result.file_no, 'number', 'file_noが正しいこと');
+    t.ok(Object.prototype.hasOwnProperty.call(result, 'created'), 'createdを含むこと');
   });
 }
