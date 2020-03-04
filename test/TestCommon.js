@@ -10,3 +10,9 @@ TestCommon.prototype.getClient = function getClient() {
   this.client = new MagicPodClient(this.token, this.orgName);
   return this.client;
 };
+
+TestCommon.prototype.compareDateTime = function compareDateTime(appFileCreated, created) {
+  var a = Moment.moment.unix(appFileCreated);
+  var b = Moment.moment(created);
+  return a.isSame(b, 'second');
+};

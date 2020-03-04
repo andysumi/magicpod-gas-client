@@ -10,6 +10,7 @@
     "console": true,
     // External Libraries
     "GasTap": true,
+    "Moment": true,
     // Our classes
     "MagicPodClient": true
   },

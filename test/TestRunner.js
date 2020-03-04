@@ -14,6 +14,7 @@ function TestRunner() { // eslint-disable-line no-unused-vars
     testExecuteBatchRunOnMagicPod(test, common);
     testUploadFromFileUrl(test, common);
     testUploadFromGoogleDrive(test, common);
+    testGetAppFiles(test, common);
     /***********************************************/
   } catch (err) {
     test('Exception occurred', function f(assert) {
@@ -160,5 +161,21 @@ function testUploadFromGoogleDrive(test, common) {
     t.equal(result.file_name, fileName + '.apk', 'file_nameが正しいこと');
     t.equal(typeof result.file_no, 'number', 'file_noが正しいこと');
     t.ok(Object.prototype.hasOwnProperty.call(result, 'created'), 'createdを含むこと');
+  });
+}
+
+function testGetAppFiles(test, common) {
+  var client = common.getClient();
+  var projectName = 'android';
+  var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
+
+  test('getAppFiles()', function (t) {
+    var upload = client.uploadFromFileUrl(projectName, common.appFileUrl, fileName);
+
+    var result = client.getAppFiles(projectName);
+    t.ok(Array.isArray(result.app_files), 'app_filesが配列であること');
+    t.equal(result.app_files[0].app_file_number, upload.file_no, 'app_file_numberが正しいこと');
+    t.equal(result.app_files[0].app_file_name, upload.file_name, 'app_file_nameが正しいこと');
+    t.ok(common.compareDateTime(result.app_files[0].app_file_created, upload.created),'app_file_createdが正しいこと');
   });
 }
