@@ -15,6 +15,7 @@ function TestRunner() { // eslint-disable-line no-unused-vars
     testUploadFromFileUrl(test, common);
     testUploadFromGoogleDrive(test, common);
     testGetAppFiles(test, common);
+    testDeleteAppFile(test, common);
     /***********************************************/
   } catch (err) {
     test('Exception occurred', function f(assert) {
@@ -177,5 +178,18 @@ function testGetAppFiles(test, common) {
     t.equal(result.app_files[0].app_file_number, upload.file_no, 'app_file_numberが正しいこと');
     t.equal(result.app_files[0].app_file_name, upload.file_name, 'app_file_nameが正しいこと');
     t.ok(common.compareDateTime(result.app_files[0].app_file_created, upload.created),'app_file_createdが正しいこと');
+  });
+}
+
+function testDeleteAppFile(test, common) {
+  var client = common.getClient();
+  var projectName = 'android';
+  var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
+
+  test('deleteAppFile()', function (t) {
+    var upload = client.uploadFromFileUrl(projectName, common.appFileUrl, fileName);
+
+    var result = client.deleteAppFile(projectName, upload.file_no);
+    t.equal(result.app_file_number, upload.file_no, 'app_file_numberが正しいこと');
   });
 }
