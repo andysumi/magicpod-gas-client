@@ -10,6 +10,7 @@ function TestRunner() { // eslint-disable-line no-unused-vars
 
   /***** Test cases ******************************/
   testGetSpecificBatchRunResult_(test, common);
+  testGetBatchRunResults_(test, common);
   testExecuteBatchRunOnMagicPod_(test, common);
   testUploadFromFileUrl_(test, common);
   testUploadFromGoogleDrive_(test, common);
@@ -47,6 +48,35 @@ function testGetSpecificBatchRunResult_(test, common) {
           total: 1
         },
         'url': Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/1/', common.orgName, projectName)
+      },
+      'ステータスが"succeeded"のレスポンスが正しいこと');
+  });
+}
+
+function testGetBatchRunResults_(test, common) {
+  var client = common.getClient();
+  var projectName = 'android';
+
+  test('getBatchRunResults()', function (t) {
+    var result = client.getBatchRunResults(projectName, { min_batch_run_number: 1, max_batch_run_number: 1, count: 1 });
+    t.deepEqual(
+      result,
+      {
+        organization_name: common.orgName,
+        project_name: projectName,
+        batch_runs: [
+          {
+            batch_run_number: 1,
+            status: 'succeeded',
+            started_at: '2020-03-02T01:49:56Z',
+            finished_at: '2020-03-02T01:50:25Z',
+            test_cases: {
+              succeeded: 1,
+              total: 1
+            },
+            url: Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/1/', common.orgName, projectName)
+          }
+        ]
       },
       'ステータスが"succeeded"のレスポンスが正しいこと');
   });

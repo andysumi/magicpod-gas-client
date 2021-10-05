@@ -19,6 +19,16 @@ function getSpecificBatchRunResult(projectName, batchRunNo) { // eslint-disable-
 }
 
 /**
+ * 指定した一括実行のテスト結果を取得する
+ * @param {string} projectName プロジェクト名
+ * @param {Object} params
+ * @return {Object}
+ */
+function getBatchRunResults(projectName, params) { // eslint-disable-line no-unused-vars
+  throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
+}
+
+/**
  * MagicPodのクラウド環境でテスト一括実行を実行する
  * @param {string} projectName プロジェクト名
  * @param {Object} param パラメータ

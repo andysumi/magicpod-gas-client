@@ -14,6 +14,19 @@
       return this.fetch_(Utilities.formatString('/%s/batch-run/%s/', projectName, batchRunNo), { method: 'get' });
     };
 
+    MagicPodClient.prototype.getBatchRunResults = function (projectName, params) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+
+      var temp = [];
+      if (params) {
+        for (var key in params) {
+          temp.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+        }
+      }
+
+      return this.fetch_(Utilities.formatString('/%s/batch-runs/?%s', projectName, temp.join('&')), { method: 'get' });
+    };
+
     MagicPodClient.prototype.executeBatchRunOnMagicPod = function (projectName, param) {
       if (!projectName) throw new Error('"projectName"は必須です');
       if (!param) throw new Error('"param"は必須です');
