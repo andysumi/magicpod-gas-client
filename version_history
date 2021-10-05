@@ -2,3 +2,4 @@
 2 - uploadFromFileUrlメソッド、uploadFromGoogleDriveメソッドを追加
 3 - getAppFilesメソッド、deleteAppFileメソッドを追加
 4 - executeBatchRunOnMagicPodメソッドのAndroid対応
+5 - getBatchRunResultsメソッドを追加
