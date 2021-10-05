@@ -9,12 +9,12 @@ function create(token, orgName) { // eslint-disable-line no-unused-vars
 }
 
 /**
- * 一括実行のテスト結果を取得する
+ * 指定した一括実行のテスト結果を取得する
  * @param {string} projectName プロジェクト名
  * @param {number} batchRunNo 一括実行結果のNo
  * @return {Object}
  */
-function getBatchRunResult(projectName, batchRunNo) { // eslint-disable-line no-unused-vars
+function getSpecificBatchRunResult(projectName, batchRunNo) { // eslint-disable-line no-unused-vars
   throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
 }
 

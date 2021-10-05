@@ -8,21 +8,14 @@ function TestRunner() { // eslint-disable-line no-unused-vars
   var test = new GasTap();
   var common = new TestCommon();
 
-  try {
-    /***** Test cases ******************************/
-    testGetBatchRunResult(test, common);
-    testExecuteBatchRunOnMagicPod(test, common);
-    testUploadFromFileUrl(test, common);
-    testUploadFromGoogleDrive(test, common);
-    testGetAppFiles(test, common);
-    testDeleteAppFile(test, common);
-    /***********************************************/
-  } catch (err) {
-    test('Exception occurred', function f(assert) {
-      Logger.log(err);
-      assert.fail(err);
-    });
-  }
+  /***** Test cases ******************************/
+  testGetSpecificBatchRunResult_(test, common);
+  testExecuteBatchRunOnMagicPod_(test, common);
+  testUploadFromFileUrl_(test, common);
+  testUploadFromGoogleDrive_(test, common);
+  testGetAppFiles_(test, common);
+  testDeleteAppFile_(test, common);
+  /***********************************************/
 
   test.finish();
 
@@ -34,14 +27,12 @@ function TestRunner() { // eslint-disable-line no-unused-vars
   };
 }
 
-function testGetBatchRunResult(test, common) {
+function testGetSpecificBatchRunResult_(test, common) {
   var client = common.getClient();
   var projectName = 'android';
 
-  test('getBatchRunResult() - static results', function (t) {
-    var result;
-
-    result = client.getBatchRunResult(projectName, 1);
+  test('getSpecificBatchRunResult()', function (t) {
+    var result = client.getSpecificBatchRunResult(projectName, 1);
     t.deepEqual(
       result,
       {
@@ -49,87 +40,19 @@ function testGetBatchRunResult(test, common) {
         project_name: projectName,
         batch_run_number: 1,
         status: 'succeeded',
+        started_at: '2020-03-02T01:49:56Z',
+        finished_at: '2020-03-02T01:50:25Z',
         test_cases: {
-          succeeded: 2,
-          total: 2
+          succeeded: 1,
+          total: 1
         },
         'url': Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/1/', common.orgName, projectName)
       },
       'ステータスが"succeeded"のレスポンスが正しいこと');
-
-    result = client.getBatchRunResult(projectName, 2);
-    t.deepEqual(
-      result, {
-        organization_name: common.orgName,
-        project_name: projectName,
-        batch_run_number: 2,
-        status: 'failed',
-        test_cases: {
-          failed: 2,
-          total: 2
-        },
-        'url': Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/2/', common.orgName, projectName)
-      },
-      'ステータスが"failed"のレスポンスが正しいこと');
-
-    result = client.getBatchRunResult(projectName, 3);
-    t.deepEqual(
-      result,
-      {
-        organization_name: common.orgName,
-        project_name: projectName,
-        batch_run_number: 3,
-        status: 'aborted',
-        test_cases: {
-          aborted: 2,
-          total: 2
-        },
-        'url': Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/3/', common.orgName, projectName)
-      },
-      'ステータスが"aborted"のレスポンスが正しいこと');
-
-    result = client.getBatchRunResult(projectName, 7);
-    t.deepEqual(
-      result,
-      {
-        organization_name: common.orgName,
-        project_name: projectName,
-        batch_run_number: 7,
-        status: 'unresolved',
-        test_cases: {
-          unresolved: 2,
-          total: 2
-        },
-        'url': Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/7/', common.orgName, projectName)
-      },
-      'ステータスが"unresolved"のレスポンスが正しいこと');
-  });
-
-  test('getBatchRunResult() - dynamic results', function (t) {
-    var run = client.executeBatchRunOnMagicPod(projectName, {
-      os: 'android',
-      app_type: 'app_file',
-      app_file_number: 'latest',
-    });
-
-    var result = client.getBatchRunResult(projectName, run.batch_run_number);
-    t.deepEqual(
-      result,
-      {
-        organization_name: common.orgName,
-        project_name: projectName,
-        batch_run_number: run.batch_run_number,
-        status: 'running',
-        test_cases: {
-          total: 0
-        },
-        'url': Utilities.formatString('https://magic-pod.com/%s/%s/batch-run/%s/', common.orgName, projectName, run.batch_run_number)
-      },
-      'ステータスが"running"のレスポンスが正しいこと');
   });
 }
 
-function testExecuteBatchRunOnMagicPod(test, common) {
+function testExecuteBatchRunOnMagicPod_(test, common) {
   var client = common.getClient();
   var projectName = 'android';
 
@@ -165,7 +88,7 @@ function testExecuteBatchRunOnMagicPod(test, common) {
   });
 }
 
-function testUploadFromFileUrl(test, common) {
+function testUploadFromFileUrl_(test, common) {
   var client = common.getClient();
   var projectName = 'android';
   var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
@@ -178,7 +101,7 @@ function testUploadFromFileUrl(test, common) {
   });
 }
 
-function testUploadFromGoogleDrive(test, common) {
+function testUploadFromGoogleDrive_(test, common) {
   var client = common.getClient();
   var projectName = 'android';
   var fileName = Utilities.formatString('Demo-fromGDrive_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
@@ -191,7 +114,7 @@ function testUploadFromGoogleDrive(test, common) {
   });
 }
 
-function testGetAppFiles(test, common) {
+function testGetAppFiles_(test, common) {
   var client = common.getClient();
   var projectName = 'android';
   var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));
@@ -207,7 +130,7 @@ function testGetAppFiles(test, common) {
   });
 }
 
-function testDeleteAppFile(test, common) {
+function testDeleteAppFile_(test, common) {
   var client = common.getClient();
   var projectName = 'android';
   var fileName = Utilities.formatString('Demo-fromUrl_%s', Utilities.formatDate(new Date(), 'JST', 'yyyyMMddHHmmss'));

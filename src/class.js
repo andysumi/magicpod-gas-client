@@ -7,7 +7,7 @@
       this.headers = {Authorization: 'Token ' + token};
     }
 
-    MagicPodClient.prototype.getBatchRunResult = function (projectName, batchRunNo) {
+    MagicPodClient.prototype.getSpecificBatchRunResult = function (projectName, batchRunNo) {
       if (!projectName) throw new Error('"projectName"は必須です');
       if (!batchRunNo) throw new Error('"batchRunNo"は必須です');
 
