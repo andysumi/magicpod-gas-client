@@ -18,9 +18,8 @@
     "url": "https://github.com/andysumi/magicpod-gas-client/issues"
   },
   "homepage": "https://github.com/andysumi/magicpod-gas-client#readme",
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^6.4.0",
-    "eslint-plugin-googleappsscript": "^1.0.3"
+    "eslint": "^7.32.0",
+    "eslint-plugin-googleappsscript": "^1.0.4"
   }
 }

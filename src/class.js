@@ -7,11 +7,24 @@
       this.headers = {Authorization: 'Token ' + token};
     }
 
-    MagicPodClient.prototype.getBatchRunResult = function (projectName, batchRunNo) {
+    MagicPodClient.prototype.getSpecificBatchRunResult = function (projectName, batchRunNo) {
       if (!projectName) throw new Error('"projectName"は必須です');
       if (!batchRunNo) throw new Error('"batchRunNo"は必須です');
 
       return this.fetch_(Utilities.formatString('/%s/batch-run/%s/', projectName, batchRunNo), { method: 'get' });
+    };
+
+    MagicPodClient.prototype.getBatchRunResults = function (projectName, params) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+
+      var temp = [];
+      if (params) {
+        for (var key in params) {
+          temp.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+        }
+      }
+
+      return this.fetch_(Utilities.formatString('/%s/batch-runs/?%s', projectName, temp.join('&')), { method: 'get' });
     };
 
     MagicPodClient.prototype.executeBatchRunOnMagicPod = function (projectName, param) {
