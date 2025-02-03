@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/andysumi/magicpod-gas-client.svg?style=svg)](https://circleci.com/gh/andysumi/magicpod-gas-client)
+[![Run test](https://github.com/andysumi/magicpod-gas-client/actions/workflows/test.yml/badge.svg)](https://github.com/andysumi/magicpod-gas-client/actions/workflows/test.yml)
 
 # magicpod-gas-client
 
