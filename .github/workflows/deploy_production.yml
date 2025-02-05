@@ -1,11 +1,9 @@
 name: Deploy to production project
 
 on:
-  workflow_dispatch:
-    inputs:
-      description:
-        description: "Description"
-        required: true
+  push:
+    tags:
+      - 'v.*'
 
 jobs:
   deploy:
@@ -31,7 +29,8 @@ jobs:
           npm run upload
       - name: Deploy application
         run: |
-          npm run deploy -- ${{ github.event.inputs.description }}
+          change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
+          npm run deploy -- ${change_log}
   release:
     needs: deploy
     runs-on: ubuntu-latest
@@ -40,6 +39,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Create Release
         run: |
-          gh release create ${{github.ref_name}} --generate-notes ${{github.ref_name}}.tar.gz
+          gh release create ${{github.ref_name}} --generate-notes
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
