@@ -1,71 +1,45 @@
-name: Deploy to production
+name: Deploy to development project
+
 on:
-  push:
-    tags:
-      - 'v.*'
+  workflow_dispatch:
+    inputs:
+      description:
+        description: "Description"
+        required: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js Latest
+        uses: actions/setup-node@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ env.cache-name }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: latest
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
       - name: Create credential file
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.LARGE_SECRET_PASSPHRASE}}" --output ~/.clasprc.json .clasprc.json.gpg
+        run: |
+          echo \{\"token\":\{\"access_token\":\"${{ secrets.ACCESS_TOKEN}}\",\"scope\":\"https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/script.projects https://www.googleapis.com/auth/script.webapp.deploy https://www.googleapis.com/auth/logging.read openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/script.deployments https://www.googleapis.com/auth/service.management https://www.googleapis.com/auth/cloud-platform\",\"token_type\":\"Bearer\",\"id_token\":\"${{ secrets.ID_TOKEN }}\",\"expiry_date\":1738719227658,\"refresh_token\":\"${{ secrets.REFRESH_TOKEN }}\"\},\"oauth2ClientSettings\":\{\"clientId\":\"${{ secrets.CLIENTID }}\",\"clientSecret\":\"${{ secrets.CLIENTSECRET }}\",\"redirectUri\":\"http://localhost\"\},\"isLocalCreds\":false\} > ~/.clasprc.json
       - name: Create project file
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.LARGE_SECRET_PASSPHRASE}}" --output .clasp.json .clasp_production.json.gpg
+        run:  |
+          echo \{\"scriptId\":\"1AqrlQxmypqWIW_x9yF5mLobB2kHy-RARMgTKP8xDudF5hDC9Lr2v5Rrf\"\} > .clasp.json
       - name: Upload files
-        run: npx @google/clasp push --force
+        run: |
+          npm run upload
       - name: Deploy application
         run: |
-          change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
-          npx @google/clasp version ${change_log}
-      - name: Notify slack
-        if: ${{ failure() }}
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          author_name: ${{ github.workflow }}
-          username: Github Actions
-          icon_emoji: ':githubalt:'
-          channel: '#github_notify'
-          text: '<https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|${{ job.status }}>: <https://github.com/${{ github.repository }}/actions?query=workflow:${{ github.workflow }}|${{ github.workflow }} Workflow> executed by ${{ github.actor }}'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          npm run deploy -- ${{ github.event.inputs.description }}
   release:
-      needs: deploy
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Create Release
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: Release ${{ github.ref }}
-            draft: 'false'
-            prerelease: 'false'
-        - name: Notify slack
-          if: ${{ always() }}
-          uses: 8398a7/action-slack@v3
-          with:
-            status: ${{ job.status }}
-            author_name: ${{ github.workflow }}
-            username: Github Actions
-            icon_emoji: ':githubalt:'
-            channel: '#github_notify'
-            text: '<https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks|${{ job.status }}>: <https://github.com/${{ github.repository }}/actions?query=workflow:${{ github.workflow }}|${{ github.workflow }} Workflow> executed by ${{ github.actor }}'
-          env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create Release
+        run: |
+          gh release create ${{github.ref_name}} --generate-notes ${{github.ref_name}}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

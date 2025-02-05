@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint 'src/**/*.js' -c .eslintrc.js",
-    "upload": "clasp upload --force",
+    "upload": "clasp push --force",
     "deploy": "clasp version"
   },
   "repository": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/andysumi/magicpod-gas-client#readme",
   "devDependencies": {
+    "@google/clasp": "^2.5.0",
     "eslint": "^8.57.1",
     "eslint-plugin-googleappsscript": "^1.0.5"
   }
