@@ -120,6 +120,19 @@
       return this.fetch_(Utilities.formatString('/%s/delete-file/', projectName), { method: 'delete', payload: JSON.stringify({ app_file_number: fileNo }) });
     };
 
+    MagicPodClient.prototype.getHealthScore = function (projectName, params) {
+      if (!projectName) throw new Error('"projectName"は必須です');
+
+      var temp = [];
+      if (params) {
+        for (var key in params) {
+          temp.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+        }
+      }
+
+      return this.fetch_(Utilities.formatString('/%s/health-score/?%s', projectName, temp.join('&')), { method: 'get' });
+    };
+
     MagicPodClient.prototype.executeBatchRun_ = function (projectName, param) {
       param.device_language = (!param.device_language) ? 'ja' : param.device_language;
       param.device_region = (!param.device_region) ? 'JP' : param.device_region;
