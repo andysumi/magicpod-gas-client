@@ -141,3 +141,13 @@ function getAppFiles(projectName) { // eslint-disable-line no-unused-vars
 function deleteAppFile(projectName, fileNo) { // eslint-disable-line no-unused-vars
   throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
 }
+
+/**
+ * 指定したプロジェクトの日次/週次/月次のヘルススコアを取得する
+ * @param {string} projectName プロジェクト名
+ * @param {Object} params
+ * @return {Object}
+ */
+function getHealthScore(projectName, params) { // eslint-disable-line no-unused-vars
+  throw new Error('このメソッドは直接呼び出せません。createメソッドで取得したインスタンスより呼び出してください。');
+}
