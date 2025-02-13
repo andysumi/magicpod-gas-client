@@ -3,3 +3,4 @@
 3 - getAppFilesメソッド、deleteAppFileメソッドを追加
 4 - executeBatchRunOnMagicPodメソッドのAndroid対応
 5 - getBatchRunResultsメソッドを追加
+6 - getHealthScoreメソッドを追加
